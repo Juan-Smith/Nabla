@@ -3,7 +3,7 @@
       
       NeuralNetwork --> Layer : Contains
       Layer --> Neuron : Contains
-      Neuron --> ActivationFunction : Contains
+      NeuralNetwork --> ActivationFunction : Contains
       
       class NeuralNetwork{
           -double learningrate
