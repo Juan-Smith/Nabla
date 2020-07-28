@@ -63,6 +63,7 @@ int ActivationFunction::Get_Activation_Function() const
 {
     return activation_function_type; // return activation function type
 }
+
 class Neuron
 {
     private : 
