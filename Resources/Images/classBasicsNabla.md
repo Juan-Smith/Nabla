@@ -23,16 +23,28 @@
       }
       
       class Neuron{
-      	-Activation* activation_function
-        -double bias
-        -double* weights
-        -double output
-        +double GetOutput()
-        +double* GetWeights()
-        +double GetBias()
-        +void SetOutput()
-        +void SetWeights()
-        +void SetBias()
+    -const int NUM_DECIMALS
+    -double bias
+    -double* weights
+    -double* inputs
+    -int num_weights
+    -double Random_Weight(int)
+   -double Random_Bias(int)
+    -ActivationFunction* activation_function
+   
+    +void Create_Neuron(int, int)
+    +void Destroy_Neuron()
+    +void Set_Bias(double)
+    +void Set_Weights(double*)
+    +void Set_Inputs(double*)
+    +void Set_Neuron_Activation_Function(int)
+    +double Get_Bias()
+    +double* Get_Weights()
+    +double* Get_Inputs()
+    +int Get_Activation_Function()
+    +string Get_Activation_Function_Name()
+    +double Get_Activation()
+    +double Get_PreActivation()
 	  }
       
       
