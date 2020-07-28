@@ -4,6 +4,7 @@
       NeuralNetwork --> Layer : Contains
       Layer --> Neuron : Contains
       NeuralNetwork --> ActivationFunction : Contains
+      Neuron --> ActivationFunction : Contains
       
       class NeuralNetwork{
           -double learningrate
@@ -36,7 +37,10 @@
       
       
       class ActivationFunction{
-          +double GetActivation()
+          -int activation_function_type
+          +void Set_Activation_Function(int)
+          +double Evaluate_Activation_Function_At(double)
+          +double Evaluate_Activation_Derivative_At(double)
       }
       
 ```
