@@ -340,12 +340,11 @@ int Layer::Get_Weights_Count_At(int index) const
 class NeuralNetwork
 {
     private : 
-        int num_inputs = 0;
-        int num_outputs = 0;
-        int num_hidden_layers = 0;
+        int num_layers = 0;
         Layer* layers = 0;
+        bool Check_Valid(int, int, int); // check if network structure is valid
     public :
-        void Create_Neural_Network(int*, int); // create Neural Network
+        void Create_Neural_Network(int*, int, int); // create Neural Network
         void Destroy_Neural_Network(); // free up memory allocated to the neural network
         void Set_Activation_Function_At_Neuron(int, int, int); // set activation function of specific neuron in network
         void Set_Activation_Function_At_Layer(int, int); // mutator method for layer's activation function
@@ -356,24 +355,131 @@ class NeuralNetwork
         void Set_Inputs_At_Neuron(int, int, double*); // mutator method to alter particular neuron's inputs
         void Set_Inputs_At_Layer(int, double**); // mutator method to alter layer's inputs
         double* Get_Weights_At_Neuron(int, int) const; // accessor method for neuron's weights
-        double* Get_Weights_At_Layer(int) const; // accessor method for layers weights
         double* Get_Inputs_At_Neuron(int, int) const; //accessor methods for neurons inputs
-        double* Get_Inputs_At_Layer(int) const; // accessor methods for layers inputs
         int Get_Activation_Function_At_Neuron(int, int) const; //accessor method for neuron's activation function
-        int* Get_Activation_Function_At_Layer(int) const; // accessor method for layers activation functions
         double Get_Bias_At_Neuron(int, int) const; // accessor method for particular neuron's bias
-        double* Get_Bias_At_Layer(int) const; // accesor method for particular layer's biases
         string Get_Activation_Function_Name_At_Neuron(int, int) const; // get name of particular neuron's activation function
-        string* Get_Activation_Function_Name_At_Layer(int) const; // get list of layer's activation functions
         double Get_Activation_At_Neuron(int, int) const; // get neuron's activation
-        double* Get_Activation_At_Layer(int) const; // get all activations from layer
         double Get_PreActivation_At_Neuron(int, int) const; // get neuron's preactivation
-        double* Get_PreActivation_At_Layer(int) const; // get layer's pre activations
         int Get_Layer_Size_At(int) const; // get size of layer in network
         int Get_Weights_Count_At_Neuron(int, int) const; // get number of weights from neuron
-        int Get_Weights_Count_At_Layer(int) const; // get number of weights in layer
         int Get_Inputs_Count_At_Neuron(int, int) const; // get number of inputs to neuron
-        int Get_Inputs_Count_At_Layer(int) const; // get number of inputs to layer
+        int Get_Inputs_Count_At_Network() const; // get number of inputs to network
+        int Get_Outputs_Count_At_Network() const; // get number of ouptus from network
         double* Prediction(double*, int) const; // prediction of neural network
         void Train(double*, int); // train neural network
+        enum ActivationFunctions {SIGMOID = 0, TANH = 1};
 };
+
+bool NeuralNetwork::Check_Valid(int inputcount, int outputcount, int hiddenlayercount)
+{
+    bool return_value = 1;
+
+    if(inputcount < 1)
+    {
+        return_value = 0;
+        cout << "INVALID INPUT, NUMBER OF INPUTS MUST BE AT LEAST 1";
+    }
+    else if(outputcount < 1)
+    {
+        return_value = 0;
+        cout << "INVALID INPUT, NUMBER OF OUTPUTS MUST BE AT LEAST 1";
+    }
+    else if(hiddenlayercount < 0)
+    {
+        return_value = 0;
+        cout << "INVALID INPUT, NUMBER OF HIDDEN LAYERS MUST BE AT LEAST 0";
+    }
+    
+}
+
+void NeuralNetwork::Create_Neural_Network(int* layersizes, int layerscount, int activation_function)
+{
+    int numinputs = *layersizes;
+    int numoutputs = *(layersizes + (layerscount - 1));
+
+    if(Check_Valid(numinputs, numoutputs, layerscount - 2)) // check if network structure is valid
+    {
+
+        layers = new Layer[layerscount]; // allocate space for networks layers
+
+        (*layers).Create_Layer(*layersizes, 1, activation_function);
+
+        for(int l = 1; l < layerscount; l++) // loop through all layers except first
+        {
+            (*(layers + l)).Create_Layer(*(layersizes + l), *(layersizes + (l-1)), activation_function); // initialize dense layers
+        }
+
+        double* inputweights = new double;
+        *inputweights = 1;
+
+        for(int f = 0; f < (*layers).Get_Layer_Size(); f++) // loop through all neurons in input layer
+        {
+            (*layers).Set_Bias_At(f, 0.0); // set biases of all input neurons to 0
+            (*layers).Set_Weights_At(f, inputweights); // set weights of all neurons in first layer to 1
+        }
+    }
+}
+
+void NeuralNetwork::Destroy_Neural_Network()
+{
+    num_layers = 0; //set number of layers to zero
+    delete layers; // free space taken by network's layers
+}
+
+void NeuralNetwork::Set_Activation_Function_At_Neuron(int layer, int index, int activationfunction)
+{
+    (*(layers + layer)).Set_Activation_Function_At(index, activationfunction);
+}
+
+void NeuralNetwork::Set_Activation_Function_At_Layer(int layer, int activationfunction)
+{
+    for(int n = 0; n < (*(layers + layer)).Get_Layer_Size(); n++)
+    {
+        (*(layers + layer)).Set_Activation_Function_At(n, activationfunction);
+    }
+}
+
+void NeuralNetwork::Set_Bias_At_Neuron(int layer, int index, double bias)
+{
+     (*(layers + layer)).Set_Bias_At(index, bias);
+}
+
+void NeuralNetwork::Set_Bias_At_Layer(int layer, double* biases)
+{
+    for(int n = 0; n < (*(layers + layer)).Get_Layer_Size(); n++)
+    {
+        (*(layers + layer)).Set_Bias_At(n, *(biases + n));
+    }
+}
+
+void NeuralNetwork::Set_Weights_At_Neuron(int layer, int index, double* weights)
+{
+    (*(layers + layer)).Set_Weights_At(index, weights);
+}
+
+void NeuralNetwork::Set_Weights_At_Layer(int layer, double** weights)
+{
+     for(int n = 0; n < (*(layers + layer)).Get_Layer_Size(); n++)
+    {
+        (*(layers + layer)).Set_Weights_At(n, *(weights + n));
+    }
+}
+
+void NeuralNetwork::Set_Inputs_At_Neuron(int layer, int index, double* inputs)
+{
+     (*(layers + layer)).Set_Inputs_At(index, inputs);
+}
+
+void NeuralNetwork::Set_Inputs_At_Layer(int layer, double** inputs)
+{
+    for(int n = 0; n < (*(layers + layer)).Get_Layer_Size(); n++)
+    {
+        (*(layers + layer)).Set_Inputs_At(n, *(inputs + n));
+    }
+}
+
+double* NeuralNetwork::Get_Weights_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Weights_At(index);
+}
