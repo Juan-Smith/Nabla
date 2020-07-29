@@ -49,10 +49,12 @@
       
       
       class ActivationFunction{
-          -int activation_function_type
-          +void Set_Activation_Function(int)
-          +double Evaluate_Activation_Function_At(double)
-          +double Evaluate_Activation_Derivative_At(double)
+        -int activation_function_type
+        +enum ActivationFunctions
+        +void Set_Activation_Function(int)
+        +int Get_Activation_Function()
+        +double Evaluate_Activation_Function_At(double)
+        +double Evaluate_Activation_Derivative_At(double)
       }
       
 ```
