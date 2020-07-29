@@ -228,33 +228,114 @@ int Neuron::Get_Input_Count() const
 class Layer
 {
     private : 
-    int LayerSize = 0; // stores amount of neurons in the layer
+    int layer_size = 0; // stores amount of neurons in the layer
     Neuron* neurons = 0; // stores all the neurons in the layer
     public : 
-    void Create_Layer(int, int); // method for instantiating a new layer
+    void Create_Layer(int, int, int); // method for instantiating a new layer
     void Destroy_Layer(); // method for removing layer from memory
-    void Set_Activation_Function(int); // mutator method for all neurons in layer's activation function
     void Set_Activation_Function_At(int, int); // mutator method for specific neuron in Layer's activation function
-    void Set_Bias(); // mutator method for biases of all neurons in layer
-    void Set_Bias_At(int); //mutator method for bias of specific neuron in layer
-    void Set_Weights(); //mutator method for weights of all neurons in layer
-    void Set_Weights_At(int); //mutator method for weights of a specific neuron in layer
-    void Set_Inputs(); //mutator method for inputs to all neurons in layer
-    void Set_Inputs_At(int); //mutator method for input to specific neuron in layer
-    double* Get_Weights() const; // accessor method for weights of all neurons in layer
+    void Set_Bias_At(int, double); //mutator method for bias of specific neuron in layer
+    void Set_Weights_At(int, double*); //mutator method for weights of a specific neuron in layer
+    void Set_Inputs_At(int, double*); //mutator method for input to specific neuron in layer
     double* Get_Weights_At(int) const; // accessor method for weights of a specific neuron in the layer
-    double* Get_Bias() const; // accessor method for biases of all neurons in layer
     double Get_Bias_At(int) const; // accessor method for bias of specific neuron in layer
-    int* Get_Activation_Function() const; // accessor method for activation functions of all neurons in layer
     int Get_Activation_Function_At(int) const; // accessor method for activation function of specific neuron in layer
-    double* Get_Activation() const; // accessor method for activations of all neurons in layer
+    string Get_Activation_Function_Name_At(int) const; // accessor method for activation function's name of specific neuron in layer
     double Get_Activation_At(int) const; //accessor method for activation of specific neuron in layer
-    double* Get_PreActivation() const; // accessor method for preactivation of all neurons in layer
     double Get_PreActivation_At(int) const; // accessor method for preactivation of specific neuron in layer
     int Get_Layer_Size() const; //accessor method for size of layer
-    double* Get_Inputs() const; //accessor method for inputs to neurons of all neurons in layer
     double* Get_Inputs_At(int) const; //accessor method for inputs to specific neuron in layer
+    int Get_Weights_Count_At(int) const; // get number of weights of neuron in layer 
+    int Get_Inputs_Count_At(int) const; // get number of inputs to neuron in layer
 };
+
+void Layer::Create_Layer(int sizeoflayer, int inputcount, int activation_func)
+{
+    layer_size = sizeoflayer; // set layer_size equal to input argument
+
+    neurons = new Neuron[layer_size]; // create space dynamically for all neurons in layer
+
+    for(int n = 0; n < layer_size; n++) // loop through all neurons in layer
+    {
+        (*(neurons + n)).Create_Neuron(inputcount, activation_func); // initialize all neurons in layer with given number of inputs and activation function
+    }
+}
+
+void Layer::Destroy_Layer()
+{
+    layer_size = 0; // set the layer's size to zero
+    delete neurons; // free up memory allocated to neurons in layer
+}
+
+void Layer::Set_Activation_Function_At(int index, int activation_func)
+{
+     (*(neurons + index)).Set_Neuron_Activation_Function(activation_func); // set specific neuron in layer to have specific activation function
+}
+
+void Layer::Set_Bias_At(int index, double bias)
+{
+    (*(neurons + index)).Set_Bias(bias); // set bias of specific neuron in layer
+}
+
+void Layer::Set_Weights_At(int index, double* input_weights)
+{
+     (*(neurons + index)).Set_Weights(input_weights); // set neuron's weight to input_weights
+}
+
+void Layer::Set_Inputs_At(int index, double* neuron_inputs)
+{
+     (*(neurons + index)).Set_Inputs(neuron_inputs); // set inputs to specific neurons
+}
+
+double* Layer::Get_Weights_At(int index) const
+{
+    return  (*(neurons + index)).Get_Inputs(); // return list of inputs to neuron
+}
+
+double Layer::Get_Bias_At(int index) const
+{
+    return  (*(neurons + index)).Get_Bias(); // return bias of neuron
+}
+
+double* Layer::Get_Inputs_At(int index) const
+{
+    return  (*(neurons + index)).Get_Inputs(); // return number of inputs to neuron
+}
+
+int Layer::Get_Activation_Function_At(int index) const
+{
+    return  (*(neurons + index)).Get_Activation_Function(); //get activation function at specific neuron
+}
+
+string Layer::Get_Activation_Function_Name_At(int index) const
+{
+    return (*(neurons + index)).Get_Activation_Function_Name(); // return name of neuron's activation function
+}
+
+double Layer::Get_Activation_At(int index) const
+{
+    return (*(neurons + index)).Get_Activation(); // get activation of specific neuron in layer
+}
+
+double Layer::Get_PreActivation_At(int index) const
+{
+    return (*(neurons + index)).Get_PreActivation(); // return preactivation of neuron
+}
+
+int Layer::Get_Layer_Size() const
+{
+    return layer_size; // return size of layer
+}
+
+int Layer::Get_Inputs_Count_At(int index) const
+{
+    return (*(neurons + index)).Get_Input_Count(); // return number of inputs to specific neuron
+}
+
+int Layer::Get_Weights_Count_At(int index) const
+{
+    return (*(neurons + index)).Get_Weight_Count(); //return the number of weights neuron has
+}
 
 class NeuralNetwork
 {
