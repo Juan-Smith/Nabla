@@ -12,11 +12,11 @@ class ActivationFunction
     private:
         int activation_function_type = SIGMOID;           // Stores the type of activation function used
     public :
+        enum ActivationFunctions {SIGMOID = 0, TANH = 1}; // enumarable to store the names of Activation functions
         void Set_Activation_Function(int);                // Mutates the contents of activation_function_type
         int Get_Activation_Function() const;              // Accessor method for activation_function_type
         double Evaluate_Activation_Function_At(double) const;   // Returns value of activation function at a specific location
         double Evaluate_Activation_Derivative_At(double) const; // Returns value of derivative of activation function at a specific Location
-        enum ActivationFunctions {SIGMOID = 0, TANH = 1};
 };
 
 void ActivationFunction::Set_Activation_Function(int typeofactivaiton) 
@@ -89,6 +89,8 @@ class Neuron
     string Get_Activation_Function_Name() const; //Accessor method for name of Neuron's Activation function
     double Get_Activation() const; // Returns activation value of the Neuron (a)
     double Get_PreActivation() const; // Returns result of weighted sum added to bias term (z)
+    int Get_Weight_Count() const; // Returns amount of weights attached to neuron
+    int Get_Input_Count() const; // Returns amount of inputs attached to neuron
 };
 
 double Neuron::Random_Weight(int decimals) const
@@ -213,9 +215,45 @@ double Neuron::Get_PreActivation() const
     return weighted_sum; // return weighted sum
 }
 
+int Neuron::Get_Weight_Count() const
+{
+    return num_weights; // returns number of weights of neuron
+}
+
+int Neuron::Get_Input_Count() const
+{
+    return num_weights; // returns number of inputs of neuron
+}
+
 class Layer
 {
-
+    private : 
+    int LayerSize = 0; // stores amount of neurons in the layer
+    Neuron* neurons = 0; // stores all the neurons in the layer
+    public : 
+    void Create_Layer(int, int); // method for instantiating a new layer
+    void Destroy_Layer(); // method for removing layer from memory
+    void Set_Activation_Function(int); // mutator method for all neurons in layer's activation function
+    void Set_Activation_Function_At(int, int); // mutator method for specific neuron in Layer's activation function
+    void Set_Bias(); // mutator method for biases of all neurons in layer
+    void Set_Bias_At(int); //mutator method for bias of specific neuron in layer
+    void Set_Weights(); //mutator method for weights of all neurons in layer
+    void Set_Weights_At(int); //mutator method for weights of a specific neuron in layer
+    void Set_Inputs(); //mutator method for inputs to all neurons in layer
+    void Set_Inputs_At(int); //mutator method for input to specific neuron in layer
+    double* Get_Weights() const; // accessor method for weights of all neurons in layer
+    double* Get_Weights_At(int) const; // accessor method for weights of a specific neuron in the layer
+    double* Get_Bias() const; // accessor method for biases of all neurons in layer
+    double Get_Bias_At(int) const; // accessor method for bias of specific neuron in layer
+    int* Get_Activation_Function() const; // accessor method for activation functions of all neurons in layer
+    int Get_Activation_Function_At(int) const; // accessor method for activation function of specific neuron in layer
+    double* Get_Activation() const; // accessor method for activations of all neurons in layer
+    double Get_Activation_At(int) const; //accessor method for activation of specific neuron in layer
+    double* Get_PreActivation() const; // accessor method for preactivation of all neurons in layer
+    double Get_PreActivation_At(int) const; // accessor method for preactivation of specific neuron in layer
+    int Get_Layer_Size() const; //accessor method for size of layer
+    double* Get_Inputs() const; //accessor method for inputs to neurons of all neurons in layer
+    double* Get_Inputs_At(int) const; //accessor method for inputs to specific neuron in layer
 };
 
 class NeuralNetwork
