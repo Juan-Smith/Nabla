@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -378,17 +379,17 @@ bool NeuralNetwork::Check_Valid(int inputcount, int outputcount, int hiddenlayer
     if(inputcount < 1)
     {
         return_value = 0;
-        cout << "INVALID INPUT, NUMBER OF INPUTS MUST BE AT LEAST 1";
+        cout << "INVALID INPUT, NUMBER OF INPUTS MUST BE AT LEAST 1" << endl;
     }
     else if(outputcount < 1)
     {
         return_value = 0;
-        cout << "INVALID INPUT, NUMBER OF OUTPUTS MUST BE AT LEAST 1";
+        cout << "INVALID INPUT, NUMBER OF OUTPUTS MUST BE AT LEAST 1" << endl;
     }
     else if(hiddenlayercount < 0)
     {
         return_value = 0;
-        cout << "INVALID INPUT, NUMBER OF HIDDEN LAYERS MUST BE AT LEAST 0";
+        cout << "INVALID INPUT, NUMBER OF HIDDEN LAYERS MUST BE AT LEAST 0" << endl;
     }
     
 }
