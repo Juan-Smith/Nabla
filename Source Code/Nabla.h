@@ -366,8 +366,8 @@ class NeuralNetwork
         int Get_Inputs_Count_At_Neuron(int, int) const; // get number of inputs to neuron
         int Get_Inputs_Count_At_Network() const; // get number of inputs to network
         int Get_Outputs_Count_At_Network() const; // get number of ouptus from network
-        double* Prediction(double*, int) const; // prediction of neural network
-        void Train(double*, int); // train neural network
+        double* Prediction(double*) const; // prediction of neural network
+        void Train(double*, double*); // train neural network
         enum ActivationFunctions {SIGMOID = 0, TANH = 1};
 };
 
@@ -482,4 +482,69 @@ void NeuralNetwork::Set_Inputs_At_Layer(int layer, double** inputs)
 double* NeuralNetwork::Get_Weights_At_Neuron(int layer, int index) const
 {
     return (*(layers + layer)).Get_Weights_At(index);
+}
+
+double* NeuralNetwork::Get_Inputs_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Inputs_At(index);
+}
+
+int NeuralNetwork::Get_Activation_Function_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Activation_Function_At(index);
+}
+
+double NeuralNetwork::Get_Bias_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Bias_At(index);
+}
+
+string NeuralNetwork::Get_Activation_Function_Name_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Activation_Function_Name_At(index);
+}
+
+double NeuralNetwork::Get_Activation_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Activation_At(index);
+}
+
+double NeuralNetwork::Get_PreActivation_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_PreActivation_At(index);
+}
+
+int NeuralNetwork::Get_Layer_Size_At(int layer) const
+{
+    return  (*(layers + layer)).Get_Layer_Size();
+}
+
+int NeuralNetwork::Get_Weights_Count_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Weights_Count_At(index);
+}
+
+int NeuralNetwork::Get_Inputs_Count_At_Neuron(int layer, int index) const
+{
+    return (*(layers + layer)).Get_Inputs_Count_At(index);
+}
+
+int NeuralNetwork::Get_Inputs_Count_At_Network() const
+{
+    return (*layers).Get_Layer_Size();
+}
+
+int NeuralNetwork::Get_Outputs_Count_At_Network() const
+{
+    return (*(layers + (num_layers - 1))).Get_Layer_Size();
+}
+
+double* NeuralNetwork::Prediction(double* inputs) const
+{
+
+}
+
+void NeuralNetwork::Train(double* inputs, double* correct_outputs)
+{
+
 }
